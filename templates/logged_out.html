@@ -1,0 +1,30 @@
+
+<html lang="en-GB">
+    <head>
+        <title>Home | Centaur API</title>
+        <meta name = "description" content = "Centaur API is an open-source multi-purpose API.">
+        <meta name = "keywords" content = "API, Centaur">
+        <style>
+            body {
+                background-color: #D0A98F;
+                color: #484041;
+            }
+            .logginButton {
+                padding: 10px;
+                color: white;
+                background-color: #484041;
+            }
+        </style>
+    </head>
+    <body>
+        <center>
+            <h1>You are logged out!</h1>
+            <br>
+            <a href = "{{ url_for('discord_login') }}">
+                <button class = "logginButton">
+                    Log In Now!
+                </button>
+            </a>
+        </center>
+    </body>
+</html>

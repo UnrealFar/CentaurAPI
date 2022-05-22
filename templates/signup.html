@@ -1,0 +1,43 @@
+
+<html lang="en-GB">
+    <head>
+        <title>
+            Sign Up | Centaur API
+        </title>
+        <link rel = "stylesheet" type = "text/css" href = "{{ url_for('static', filename = 'index.css') }}"/>
+        <style>
+            input[type=text], input[type=email], input[type=password] {
+                text-align: center;
+                padding: 10px 25px;
+                border: 5px solid #484041;
+                border-radius: 20%
+            }
+
+            input[type=sumbit] {
+                background-color: #484041;
+                border-radius: 5px;
+            }
+
+            input[type=submit]:hover {
+                background-color: #484041;
+            }
+        </style>
+    </head>
+    <form>
+        <nav>
+            <button onclick = "alert('Please sign up first!')" class = "navbarButton">Home</button>
+        </nav>
+        <center>
+            <p><b>Username:</b><input type="text" autocomplete="on" name="username" minlenth = "4" required = "true"></p>
+            <p><b>Email-id:</b><input type="email" autocomplete="on" name="email" required = "true"</p>
+            <p><b>Password:</b><input type="password" name = "password" minglength = "8" maxlength = "30" required = "true"</p>
+            <p><input type="submit" value="Sign Up!"></p>
+            <footer>
+                <p>
+                    Owner: UnrealFar&nbsp;&nbsp;&nbsp;&nbsp;
+                    Contact: <a href = "mailto:{{ app.owner_email }}" target = "_blank">Email</a>
+                </p>
+            </footer>
+        </center>
+    </form>
+</html>

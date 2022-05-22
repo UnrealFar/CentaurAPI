@@ -1,0 +1,34 @@
+<html lang="en-GB">
+    <head>
+        <title>Home | Centaur API</title>
+        <meta name = "description" content = "Centaur API is an open-source multi-purpose API.">
+        <link rel = "stylesheet" type = "text/css" href = "{{ url_for('static', filename = 'index.css') }}"/>
+    </head>
+
+    <body>
+        <nav>
+            <a href = "#">
+                <button class = "navbarButton">Home</button>
+            </a>
+            {% if logged_in %}
+                <a href = "{{ url_for('profile_page') }}">
+                    <button class = "navbarButton">Profile</button>
+                </a>
+            {% endif %}
+        </nav>
+
+        <center>
+            <h1>Welcome to Centaur API!</h1>
+            <br>
+            <br>
+            <br>
+            <br>
+            <footer>
+                <p>
+                    Owner: UnrealFar&nbsp;&nbsp;&nbsp;&nbsp;
+                    Contact: <a href = "mailto:{{ app.owner_email }}" target = "_blank">Email</a>
+                </p>
+            </footer>
+        </center>
+    </body>
+</html>

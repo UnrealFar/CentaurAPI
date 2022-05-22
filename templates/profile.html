@@ -1,0 +1,52 @@
+
+<html lang = "en-GB">
+    <head>
+        <title>
+            Profile | Centaur API
+        </title>
+        <link rel = "stylesheet" type = "text/css" href = "{{ url_for('static', filename = 'index.css') }}"/>
+        <style>
+            .profileCard {
+                text-align: left;
+                max-width: 300px;
+                background-color: #484041;
+                border-radius: 5%;
+                padding: 30px
+            }
+        </style>
+    </head>
+    <body>
+        <nav>
+            <a href = "{{ url_for('home') }}">
+                <button class = "navbarButton">Home</button>
+            </a>
+            <a href = "#">
+                <button class = "navbarButton">Profile</button>
+            </a>
+        </nav>
+        <center>
+            <div class = "profileCard">
+                <a href = "{{ url_for('accounts.root', username=account_json['username']) }}">
+                   <button style = "border:0px;padding:5px;color:white;background-color:#584D3D;border-radius:10%"><h2>@{{ account_json["username"] }}</h2></button>
+                </a>
+                {% if account_json["pfp"] %}
+                    <img src = "{{ account_json['pfp'] }}" alt = "Could not load this user's profile picture.">
+                {% endif %}
+                <h3>Display Name</h3>
+                {{ account_json["display_name"] or account_json["username"] }}
+                <h3>Bio</h3>
+                <p>{{ account_json["bio"] or "This user does not provide a bio."}}</p>
+                <h3>Email</h3>
+                <p><a href = 'mailto:{{ account_json["email"] }}'>{{ account_json["email"] }}</a></p>
+                <h5>On Centaur API since {{ account_json['created_at'].strftime('%-d %B %Y') }}</h5>
+            </div>
+            <footer>
+                <p>
+                    Owner: UnrealFar&nbsp;&nbsp;&nbsp;&nbsp;
+                    Contact: <a href = "mailto:{{ app.owner_email }}" target = "_blank">Email</a>
+                </p>
+            </footer>
+        </center>
+    </body>
+
+</html>

@@ -1,0 +1,19 @@
+html{
+    font-family: arial;
+}
+
+body{
+    background-color: #D0A98F;
+    color: white;
+}
+
+.navbarButton {
+    text-align: center;
+    padding: 10px 25px;
+    border: 2px solid #484041;
+    border-radius: 20%
+}
+
+.navbarButton:hover {
+    background-color: #484041;
+}

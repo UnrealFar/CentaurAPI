@@ -1,0 +1,4 @@
+quart
+aiohttp
+aiosqlite
+git+https://github.com/UnrealFar/Discode
