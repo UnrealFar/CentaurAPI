@@ -2,6 +2,7 @@
 *.replit
 *.breakpoints
 *.config
+__pycache__
 **/__pycache__
 *poetry.lock
 *pyproject.toml
