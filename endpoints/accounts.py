@@ -118,6 +118,7 @@ async def acc_images(img_name: str = None):
                 created_at,
             )
         ):
+            await db.commit()
             return quart.Response('{"message": "Success!"}', 200, content_type = "application/json")
     elif req.method == "GET":
         async with db.execute(

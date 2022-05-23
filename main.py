@@ -56,8 +56,13 @@ async def setup():
             """CREATE TABLE IF NOT EXISTS image_uploader
             (username TEXT, name TEXT, img_bytes LONGBLOB, created_at DATETIME)
             """
-        ): ...
+        ): await app.account_db.commit()
     app.pokemon_db = await aiosqlite.connect("data/pokemon/pokemon.sqlite")
+    async with app.pokemon_db.execute(
+        """CREATE TABLE IF NOT EXISTS pokemon
+        (id INT, name TEXT, description LONGTEXT, height INT, weight INT, rarity INT, capture_rate INT, types LONGTEXT, abilities LONGTEXT, moves LONGTEXT, base_exp INT, hp INT, attack INT, defense INT, special_attack INT, special_defense INT, speed INT)
+        """
+    ): await app.pokemon_db.commit()
     asyncio.create_task(keep_alive_task())
     app.is_setup = True
     print("Done setting up!")
