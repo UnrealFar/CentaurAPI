@@ -10,15 +10,15 @@ import time
 import aiosqlite
 
 import utils
+import ratelimiter
 import cdn
-import endpoints
 
 app = quart.Quart("CentaurAPI")
 app.html_files = html_files = {}
 app.is_setup: bool = False
 
 #change this if ur hosting this urself
-app.base_url = "https://CentaurAPI.thekungfuchuck.repl.co"
+app.base_url = "https://centaurs.live"
 app.owner_username = "unrealfar" 
 app.owner_email = "unrealreply@yahoo.com"
 app.owner_password = os.environ["password"]
@@ -26,6 +26,8 @@ app.email_app_password = os.environ["email_app_password"]
 app.secret_key = os.environ['secret_key'].encode()
 
 app.loop: asyncio.AbstractEventLoop = asyncio.new_event_loop()
+app.ratelimiter: ratelimiter.Ratelimiter = ratelimiter.Ratelimiter(app)
+
 
 app.config["dsc_client_id"] = str(os.environ.get("dsc_client_id"))
 app.config["dsc_client_secret"] = str(os.environ.get("dsc_client_secret"))
@@ -34,6 +36,9 @@ app.config["ver_link_gen"] = os.environ["ver_link_gen"]
 app.config["ver_link_dec"] = os.environ["ver_link_dec"]
 
 app.register_blueprint(cdn.cdn)
+
+import endpoints
+
 for _bp in endpoints.blueprints:
     app.register_blueprint(_bp)
     _bp.app = app
@@ -265,7 +270,29 @@ async def before_first_request():
 
 @app.before_request
 async def before_request():
-    quart.session.permanent = True
+    req = quart.request
+    ses = quart.session
+    api_key = req.headers.get("api_key") or ses.get("api_key")
+    rc = await app.ratelimiter.process_request(req.path, api_key)
+    if rc: utils.abort_json(403, {"message": rc})
+    ses.permanent = True
+
+@app.after_request
+async def after_request(response: quart.Response):
+    if response.content_type == "application/json":
+        req = quart.request
+        api_key = req.headers.get("api_key")
+        if api_key:
+            try:
+                r = app.ratelimiter.rules[req.path]
+                rem = app.ratelimiter.cache[req.path][api_key]
+
+                response.headers["X-Ratelimit-Total"] = r[0]
+                response.headers["X-Ratelimit-Remaining"] = rem
+                response.headers["X-Ratelimit-Reset"] = ((r[0] - rem) * r[1])
+            except:
+                pass
+    return response
 
 app.endpoints = ()
 
@@ -274,7 +301,7 @@ async def keep_alive_task():
         print("ping!")
         print(await (await app.client_session.get(f"{app.base_url}/ping")).text())
         await asyncio.sleep(300)
-        
+
 
 asyncio.run(app.run_task(
     host = "0.0.0.0",

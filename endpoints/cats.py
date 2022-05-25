@@ -21,3 +21,7 @@ async def random_cat():
     }
 
 cats.endpoints = (random_cat,)
+
+@cats.before_app_first_request
+async def before_app_first_request():
+    cats.app.ratelimiter.set_limit("/api/cats/random_cat", 3, 1)

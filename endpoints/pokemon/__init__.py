@@ -65,7 +65,6 @@ async def search():
     if len(args) > 0:
         dc = ("limit",)
         checks = "WHERE " + (" AND ".join((f"{k} = {v!r}" for k, v in args.items() if k not in dc)))
-        print(checks)
     else: checks = ""
     async with pokemon.app.pokemon_db.execute(
         f"""SELECT name, height, weight, types, abilities, moves, base_exp, hp, attack, defense, special_attack, special_defense, speed, rarity, capture_rate
@@ -97,4 +96,9 @@ async def search():
             })
         return await utils.send_json(200, results)
 
-pokemon.endpoints = (root,)
+pokemon.endpoints = (root, search,)
+
+@pokemon.before_app_first_request
+async def before_app_first_request():
+    pokemon.app.ratelimiter.set_limit("/api/pokemon", 5, 1)
+    pokemon.app.ratelimiter.set_limit("/api/pokemon/search", 2, 1)

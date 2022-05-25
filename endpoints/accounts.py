@@ -195,7 +195,7 @@ async def create_account():
             "password": decode_password(password),
             "created_at": created_at,
             "api_key": api_key,
-            "key_type": 0
+            "key_type": 0,
         }
 
 @accounts.route("/edit/<username>")
@@ -260,3 +260,12 @@ async def delete_account(username):
             return quart.Response('{"message": "Success!"}', 204, content_type = "application/json")
 
 accounts.endpoints = root, acc_images, create_account, edit_account, delete_account,
+
+@accounts.before_app_first_request
+async def before_app_first_request():
+    accounts.app.ratelimiter.set_limit("/api/accounts", 5, 1)
+    accounts.app.ratelimiter.set_limit("/api/accounts/create", 1, 2)
+    accounts.app.ratelimiter.set_limit("/api/accounts/edit", 1, 2)
+    accounts.app.ratelimiter.set_limit("/api/accounts/delete", 1, 2)
+    accounts.app.ratelimiter.set_limit("/api/accounts/images", 2, 1)
+    

@@ -1,8 +1,10 @@
 *.sqlite
 *.replit
 *.breakpoints
+*.env
 *.config
 __pycache__
+venv
 **/__pycache__
 *poetry.lock
 *pyproject.toml
